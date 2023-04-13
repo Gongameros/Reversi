@@ -4,24 +4,23 @@
 #include "ECS/Components.h"
 #include "Vector2D.h"
 #include "Pawn.h"
+#include <array>
+#include "Algorithms.h"
 
 Map* map;
 
-static int cnt = 0;
 SDL_Renderer* Game::renderer = nullptr;
-Manager manager;
+static int cntColor = Black;
 
-Entity& pawn(manager.addEntity());
-Entity& pawn2(manager.addEntity());
-//std::vector<Entity> pawns;
+PawnSet mainSet;
 
-
+Manager managerMain;
 
 Game::Game(){}
 
 Game::~Game(){}
 
-
+int UnhidenPawn = -1;
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
@@ -48,20 +47,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "Render created!..." << std::endl;
 		}
 
+		map = new Map();
+		mainSet.addPawn();
+		mainSet.drawStartPawns();
 		isRunning = true;
 	}
 	else { 
 		isRunning = false; 
 	}
-	map = new Map();
-	//pawns[0].addComponent<TransformComponent>();
-	//pawns[0].addComponent<SpriteComponent>("assets/pawn.png");
-	//pawns[1].addComponent<TransformComponent>(100, 500);
-	//pawns[1].addComponent<SpriteComponent>("assets/pawn.png");
-	pawn.addComponent<TransformComponent>();
-	pawn.addComponent<SpriteComponent>("assets/pawn.png");
-	pawn2.addComponent<TransformComponent>(100, 500);
-	pawn2.addComponent<SpriteComponent>("assets/pawn.png");
 
 
 }
@@ -75,7 +68,27 @@ void Game::handleEvents()
 		case SDL_QUIT:
 			isRunning = false;
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.motion.x >= 128 && event.motion.x <= 640 && event.motion.y >= 64 && event.motion.y <= 576)
+			{
+				int button_x = event.motion.x;
+				int button_y = event.motion.y;
+				UnhidenPawn = NumberOfPawn(MultiX(button_x), MultiY(button_y));
+				
+				if(cntColor==White)
+				{ 
+					mainSet.pawns[UnhidenPawn]->changeColorWhite();				
+					if(RelisedLogic(White, UnhidenPawn) == true)
+						cntColor = Black;
+				}
+				else
+				{
+					if(RelisedLogic(Black, UnhidenPawn) ==true)
+						cntColor = White;
+				}
 
+				std::cout << "X: " << button_x << " Y: " << button_y << std::endl;
+			}
 		default:
 			break;
 
@@ -85,25 +98,12 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 	map->DrawMap();
-	manager.draw();
+	managerMain.draw();
 	SDL_RenderPresent(renderer);
 }
 void Game::update()
 {
-	
-	//if (cnt < 2)
-	//{
-	//	pawns.emplace_back(Entity(manager.addEntity()));
-	//}
-	manager.update();
-	pawn.getComponent<TransformComponent>().position.add(Vector2D(0, 0));
-	if (pawn.getComponent<TransformComponent>().position.x>100)
-	{
-		pawn.getComponent<SpriteComponent>().setTex("assets/pawnWhite.png");
-
-	}
-	
-	cnt++;
+	managerMain.update();
 }
 
 void Game::clean()

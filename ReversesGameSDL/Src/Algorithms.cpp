@@ -49,11 +49,11 @@ std::vector<std::vector<int>> AlgorithmChanging(int color, int index_for_place)
     int x = (index_for_place + 1) / 8;
     int y = index_for_place % 8;
 
-    //перевірка чи пуста клітинка
+    //ГЇГҐГ°ГҐГўВіГ°ГЄГ  Г·ГЁ ГЇГіГ±ГІГ  ГЄГ«ВіГІГЁГ­ГЄГ 
     if (matrix[x][y] == 0) {
-        //перевірки чи валідні значення
+        //ГЇГҐГ°ГҐГўВіГ°ГЄГЁ Г·ГЁ ГўГ Г«ВіГ¤Г­Ві Г§Г­Г Г·ГҐГ­Г­Гї
         bool is_valid = false;
-        //перевірка по вертикалі вниз
+        //ГЇГҐГ°ГҐГўВіГ°ГЄГ  ГЇГ® ГўГҐГ°ГІГЁГЄГ Г«Ві ГўГ­ГЁГ§
         if (x < 6 && matrix[x + 1][y] != 0) {
             int x_copy = x + 1;
             while (x_copy != 8) {
@@ -68,7 +68,7 @@ std::vector<std::vector<int>> AlgorithmChanging(int color, int index_for_place)
             }
         }
 
-        //перевірка по вертикалі вгору
+        //ГЇГҐГ°ГҐГўВіГ°ГЄГ  ГЇГ® ГўГҐГ°ГІГЁГЄГ Г«Ві ГўГЈГ®Г°Гі
         if (x > 1 && matrix[x - 1][y] != 0) {
             int x_copy = x - 1;
             while (x_copy != -1) {
@@ -83,7 +83,7 @@ std::vector<std::vector<int>> AlgorithmChanging(int color, int index_for_place)
             }
         }
 
-        //перевірка по горизонталі вправо
+        //ГЇГҐГ°ГҐГўВіГ°ГЄГ  ГЇГ® ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«Ві ГўГЇГ°Г ГўГ®
         if (y < 6 && matrix[x][y + 1] != 0) {
             int y_copy = y + 1;
             while (y_copy != 8) {
@@ -98,7 +98,7 @@ std::vector<std::vector<int>> AlgorithmChanging(int color, int index_for_place)
             }
         }
 
-        //перевірка по горизонталі вліво
+        //ГЇГҐГ°ГҐГўВіГ°ГЄГ  ГЇГ® ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«Ві ГўГ«ВіГўГ®
         if (y > 1 && matrix[x][y - 1] != 0) {
             int y_copy = y - 1;
             while (y_copy != -1) {
@@ -112,6 +112,93 @@ std::vector<std::vector<int>> AlgorithmChanging(int color, int index_for_place)
                 y_copy--;
             }
         }
+                    //РїРµСЂРµРІС–СЂРєР° РїРѕ РґС–Р°РіРѕРЅР°Р»С– РІР»С–РІРѕ РІРіРѕСЂСѓ
+            if (x > 1 && y > 1 && matrix[x - 1][y - 1] != 0) {
+                int x_copy = x - 1, y_copy = y - 1;
+                while (x_copy != -1 || y_copy != -1) {
+                    if (matrix[x_copy][y_copy] == color) {
+                        if (x - x_copy > 1) {
+                            is_valid = true;
+                            while (x_copy != x + 1 || y_copy != y + 1) {
+                                matrix[x_copy][y_copy] = color;
+                                y_copy++;
+                                x_copy++;
+                            }
+                            break;
+                        } else
+                            break;
+                    } else if (matrix[x_copy][y_copy] == 0)
+                        break;
+                    x_copy--;
+                    y_copy--;
+                }
+            }
+
+            //РїРµСЂРµРІС–СЂРєР° РїРѕ РґС–Р°РіРѕРЅР°Р»С– РІРїСЂР°РІРѕ РІРіРѕСЂСѓ
+            if (x > 1 && y < 6 && matrix[x - 1][y + 1] != 0) {
+                int x_copy = x - 1, y_copy = y + 1;
+                while (x_copy != -1 || y_copy != 8) {
+                    if (matrix[x_copy][y_copy] == color) {
+                        if (x - x_copy > 1) {
+                            is_valid = true;
+                            while (x_copy != x + 1 || y_copy != y - 1) {
+                                matrix[x_copy][y_copy] = color;
+                                x_copy++;
+                                y_copy--;
+                            }
+                            break;
+                        } else
+                            break;
+                    } else if (matrix[x_copy][y_copy] == 0)
+                        break;
+                    x_copy--;
+                    y_copy++;
+                }
+            }
+
+            //РїРµСЂРµРІС–СЂРєР° РїРѕ РґС–Р°РіРѕРЅР°Р»С– РІРїСЂР°РІРѕ РІРЅРёР·
+            if (x < 6 && y < 6 && matrix[x + 1][y + 1] != 0) {
+                int x_copy = x + 1, y_copy = y + 1;
+                while (x_copy != 8 || y_copy != 8) {
+                    if (matrix[x_copy][y_copy] == color) {
+                        if (x_copy - x > 1) {
+                            is_valid = true;
+                            while (x_copy != x - 1 || y_copy != y - 1) {
+                                matrix[x_copy][y_copy] = color;
+                                y_copy--;
+                                x_copy--;
+                            }
+                            break;
+                        } else
+                            break;
+                    } else if (matrix[x_copy][y_copy] == 0)
+                        break;
+                    x_copy++;
+                    y_copy++;
+                }
+            }
+
+            //РїРµСЂРµРІС–СЂРєР° РїРѕ РґС–Р°РіРѕРЅР°Р»С– РІР»С–РІРѕ РІРЅРёР·
+            if (x < 6 && y > 1 && matrix[x + 1][y - 1] != 0) {
+                int x_copy = x + 1, y_copy = y - 1;
+                while (x_copy != 8 || y_copy != -1) {
+                    if (matrix[x_copy][y_copy] == color) {
+                        if (y - y_copy > 1) {
+                            is_valid = true;
+                            while (x_copy != x - 1 || y_copy != y + 1) {
+                                matrix[x_copy][y_copy] = color;
+                                x_copy--;
+                                y_copy++;
+                            }
+                            break;
+                        } else
+                            break;
+                    } else if (matrix[x_copy][y_copy] == 0)
+                        break;
+                    x_copy++;
+                    y_copy--;
+                }
+            }
 
 
         if (is_valid) { AcceptStep = true; }
